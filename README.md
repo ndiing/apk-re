@@ -5,21 +5,21 @@ Pastikan PC Anda sudah terinstall [JDK](https://builds.openlogic.com/downloadJDK
 ### Decoding
 Untuk mendekode APK, jalankan perintah berikut:
 
-<pre>
+```bash
 apktool d --force sf.apk
-</pre>
+```
 
 ### Modding
 Masuk ke folder hasil dekode APK. Cari file `AndroidManifest.xml`, dan periksa apakah atribut `network_security_config` sudah ada di tag `<application>`. Jika belum, tambahkan seperti ini:
 
-<pre>
+```xml
 <application android:networkSecurityConfig="@xml/network_security_config">
 </application>
-</pre>
+```
 
 Kemudian, buka folder `res/xml/` dan cek apakah file `network_security_config.xml` ada. Jika belum, buat file tersebut dengan isi sebagai berikut:
 
-<pre>
+```xml
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
     <debug-overrides>
@@ -34,27 +34,27 @@ Kemudian, buka folder `res/xml/` dan cek apakah file `network_security_config.xm
         </trust-anchors>
     </base-config>
 </network-security-config>
-</pre>
+```
 
 ### Building
 Setelah modifikasi selesai, bangun ulang APK dengan perintah berikut:
 
-<pre>
+```bash
 apktool b --debug --force-all -no-crunch --use-aapt2 --output sf.debug.apk sf
-</pre>
+```
 
 ### Signing APK
 Jika Anda belum memiliki `debug.keystore`, buat dengan perintah berikut:
 
-<pre>
+```bash
 keytool -genkey -v -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "C=US, O=Android, CN=Android Debug"
-</pre>
+```
 
 Kemudian, sign APK dengan perintah ini:
 
-<pre>
+```bash
 jarsigner -verbose -sigalg MD5withRSA -digestalg SHA1 -keystore debug.keystore -storepass android sf.debug.apk androiddebugkey
-</pre>
+```
 
 ### Instalasi
 Setelah APK siap, lanjutkan dengan instalasi APK ke perangkat.
@@ -63,30 +63,30 @@ Setelah APK siap, lanjutkan dengan instalasi APK ke perangkat.
 Jika diperlukan, lakukan `zipalign` dengan urutan sebagai berikut:
 
 1. Lakukan dekode APK seperti sebelumnya:
-   <pre>
+   ```bash
    apktool d --force sf.apk
-   </pre>
+   ```
 
 2. Tambahkan atribut `network_security_config` seperti langkah sebelumnya:
-   <pre>
+   ```xml
    <application android:networkSecurityConfig="@xml/network_security_config">
    </application>
-   </pre>
+   ```
 
 3. Lakukan modifikasi dan bangun ulang APK seperti langkah sebelumnya:
-   <pre>
+   ```bash
    apktool b --debug --force-all -no-crunch --use-aapt2 --output sf.debug.apk sf
-   </pre>
+   ```
 
 4. Sebelum signing, lakukan `zipalign` dengan perintah berikut:
-   <pre>
+   ```bash
    zipalign -p -f -v 4 sf.debug.apk sf.zipalign.apk
-   </pre>
+   ```
 
 5. Sign APK hasil `zipalign` dengan perintah berikut:
-   <pre>
+   ```bash
    apksigner.jar sign --ks debug.keystore --ks-pass pass:android --ks-key-alias androiddebugkey --key-pass pass:android sf.zipalign.apk
-   </pre>
+   ```
 
 ### Instalasi
 Setelah APK siap, lanjutkan dengan instalasi APK ke perangkat.
