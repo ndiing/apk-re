@@ -6,7 +6,7 @@ Pastikan PC Anda sudah terinstall [JDK](https://builds.openlogic.com/downloadJDK
 Untuk mendekode APK, jalankan perintah berikut:
 
 ```bash
-apktool d --force sf.apk
+apktool d --force YOUR_APK_NAME.apk
 ```
 
 ### Modding
@@ -40,7 +40,8 @@ Kemudian, buka folder `res/xml/` dan cek apakah file `network_security_config.xm
 Setelah modifikasi selesai, bangun ulang APK dengan perintah berikut:
 
 ```bash
-apktool b --debug --force-all -no-crunch --use-aapt2 --output sf.debug.apk sf
+apktool b --debug --force-all -no-crunch --use-aapt2 --output YOUR_APK_NAME.debug.apk YOUR_APK_NAME
+
 ```
 
 ### Signing APK
@@ -53,7 +54,8 @@ keytool -genkey -v -keystore debug.keystore -storepass android -alias androiddeb
 Kemudian, sign APK dengan perintah ini:
 
 ```bash
-jarsigner -verbose -sigalg MD5withRSA -digestalg SHA1 -keystore debug.keystore -storepass android sf.debug.apk androiddebugkey
+jarsigner -verbose -sigalg MD5withRSA -digestalg SHA1 -keystore debug.keystore -storepass android YOUR_APK_NAME.debug.apk androiddebugkey
+
 ```
 
 ### Instalasi
@@ -64,7 +66,7 @@ Jika diperlukan, lakukan `zipalign` dengan urutan sebagai berikut:
 
 1. Lakukan dekode APK seperti sebelumnya:
    ```bash
-   apktool d --force sf.apk
+   apktool d --force YOUR_APK_NAME.apk
    ```
 
 2. Tambahkan atribut `network_security_config` seperti langkah sebelumnya:
@@ -75,18 +77,21 @@ Jika diperlukan, lakukan `zipalign` dengan urutan sebagai berikut:
 
 3. Lakukan modifikasi dan bangun ulang APK seperti langkah sebelumnya:
    ```bash
-   apktool b --debug --force-all -no-crunch --use-aapt2 --output sf.debug.apk sf
+   apktool b --debug --force-all -no-crunch --use-aapt2 --output YOUR_APK_NAME.debug.apk YOUR_APK_NAME
+   
    ```
 
 4. Sebelum signing, lakukan `zipalign` dengan perintah berikut:
    ```bash
-   zipalign -p -f -v 4 sf.debug.apk sf.zipalign.apk
+   zipalign -p -f -v 4 YOUR_APK_NAME.debug.apk YOUR_APK_NAME.zipalign.apk
    ```
 
 5. Sign APK hasil `zipalign` dengan perintah berikut:
    ```bash
-   apksigner.jar sign --ks debug.keystore --ks-pass pass:android --ks-key-alias androiddebugkey --key-pass pass:android sf.zipalign.apk
+   apksigner.jar sign --ks debug.keystore --ks-pass pass:android --ks-key-alias androiddebugkey --key-pass pass:android YOUR_APK_NAME.zipalign.apk
+   
    ```
 
 ### Instalasi
 Setelah APK siap, lanjutkan dengan instalasi APK ke perangkat.
+
